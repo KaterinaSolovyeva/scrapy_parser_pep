@@ -4,6 +4,7 @@ from collections import Counter
 from pep_parse.settings import BASE_DIR, DATETIME_FORMAT
 
 statuses = []
+results = ['Статус,Количество\n']
 
 
 class PepParsePipeline:
@@ -24,8 +25,8 @@ class PepParsePipeline:
     def close_spider(self, spider):
         total = len(statuses)
         counter = Counter(statuses)
-        self.file.write('Статус,Количество\n')
         for status, quantity in counter.items():
-            self.file.write(f'{status},{quantity}\n')
-        self.file.write(f'Total,{total}\n')
+            results.append(f'{status},{quantity}\n')
+        results.append(f'Total,{total}\n')
+        self.file.writelines(results)
         self.file.close()
